@@ -1,0 +1,45 @@
+import numpy as np
+class SGD:
+
+    def __init__(self,learning_rate=0.001,epochs=10000):
+
+        self.coef_ = None
+        self.intercept_ = None
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+
+
+    def fit(self,X_train,y_train):
+        # start with random values of betas
+        self.intercept_ = 0
+        self.coef_ = np.ones(X_train.shape[1])
+
+        #print(self.intercept_)
+        #print(self.coef_)
+        #print("----------------------")
+
+        # update
+        for epoch in range(self.epochs):
+
+            for i in range(X_train.shape[0]):
+
+                y_hat = np.dot(X_train[i], self.coef_) + self.intercept_
+                i_der = -2 * np.mean(y_train[i] - y_hat)  # intercept derivative
+                self.intercept_ = self.intercept_ - self.learning_rate * i_der
+
+                c_der = -2 * (np.dot(y_train[i] - y_hat, X_train[i]) / X_train.shape[0])  # coefficient derivative
+                self.coef_ = self.coef_ - self.learning_rate * c_der
+
+
+            #print(self.intercept_)
+            #print(self.coef_)
+
+            # calculate the loss
+            #loss = np.dot(y_train - y_hat,y_train - y_hat)/X_train.shape[0]
+            #print(loss)
+
+
+    def predict(self,X_test):
+
+        y_pred = np.dot(X_test, self.coef_) + self.intercept_
+        return y_pred
